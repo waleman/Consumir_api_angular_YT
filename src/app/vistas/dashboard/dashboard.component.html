@@ -1,1 +1,32 @@
-<p>dashboard works!</p>
+<app-header></app-header>
+
+<div class="container">
+
+    <h3>Lisda de pacientes</h3><br>
+
+    <button type="button" class="btn btn-primary" (click)="nuevoPaciente()">Nuevo paciente</button>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">DNI</th>
+            <th scope="col">TELEFONO</th>
+            <th scope="col">CORREO</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let paciente of pacientes" (click)="editarPaciente(paciente.PacienteId)">
+            <th scope="row">{{ paciente.PacienteId}}</th>
+            <td>{{ paciente.Nombre }}</td>
+            <td>{{ paciente.DNI }}</td>
+            <td>{{ paciente.Telefono }}</td>
+            <td>{{ paciente.Correo }}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<app-footer></app-footer>
+ 

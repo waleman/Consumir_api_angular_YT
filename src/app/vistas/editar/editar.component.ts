@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PacienteI } from '../../modelos/paciente.interface';
+import { ResponseI } from '../../modelos/response.interface';
 import { ApiService } from '../../servicios/api/api.service';
-import { FormGroup,FormControl,Validators} from '@angular/forms';
+import { AlertasService } from '../../servicios/alertas/alertas.service';
+import { ReactiveFormsModule,FormsModule } from '@angular/forms';
+import { FormGroup, FormControl, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-editar',
@@ -11,7 +14,7 @@ import { FormGroup,FormControl,Validators} from '@angular/forms';
 })
 export class EditarComponent implements OnInit {
 
-  constructor(private activerouter:ActivatedRoute , private router:Router, private api:ApiService) { }
+  constructor(private activerouter:ActivatedRoute , private router:Router, private api:ApiService, private alertas:AlertasService) { }
 
   datosPaciente:PacienteI;
   editarForm = new FormGroup({
@@ -45,14 +48,36 @@ export class EditarComponent implements OnInit {
              'pacienteId': pacienteid,
             'fechaNacimiento': this.datosPaciente.FechaNacimiento
           });
-
-          console.log(this.editarForm.value);
      })
   }
 
 
   getToken(){
     return localStorage.getItem('token');
+  }
+
+  postForm(form:PacienteI){
+    this.api.putPatient(form).subscribe( data =>{
+        let respuesta:ResponseI = data;
+        if(respuesta.status == "ok"){
+            this.alertas.showSuccess('Datos modificados','Hecho');
+        }else{
+            this.alertas.showError(respuesta.result.error_msg,'Error');
+        }
+    })
+  }
+
+  eliminar(){
+    let datos:PacienteI = this.editarForm.value;
+    this.api.deletePatient(datos).subscribe(data =>{
+      let respuesta:ResponseI = data;
+        if(respuesta.status == "ok"){
+            this.alertas.showSuccess('Paciente eliminado','Hecho');
+            this.router.navigate(['dashboard']);
+        }else{
+            this.alertas.showError(respuesta.result.error_msg,'Error');
+        }
+    })
   }
 
 }

@@ -80,4 +80,11 @@ export class EditarComponent implements OnInit {
     })
   }
 
+
+  salir(){
+    this.router.navigate(['dashboard']);
+  }
+
+
+
 }
